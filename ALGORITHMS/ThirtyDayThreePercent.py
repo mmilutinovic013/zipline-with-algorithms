@@ -20,6 +20,7 @@ def initialize(context):
     context.security = symbol('AAPL')
     # initialize a day counter so that days can be taken into account 
     context.daycounter = 0
+    #comment
 
 # The handle_data function is where the real work is done.  
 # This function is run either every minute 
