@@ -1,0 +1,33 @@
+# Incompatible with earlier PIP versions
+pip>=7.0.3
+
+# Logging
+Logbook==0.9.1
+
+# Scientific Libraries
+
+pytz==2015.4
+numpy==1.9.2
+
+# scipy and pandas are required for statsmodels,
+# statsmodels in turn is required for some pandas packages
+scipy==0.15.1
+pandas==0.16.1
+# Needed for parts of pandas.stats
+patsy==0.3.0
+statsmodels==0.6.1
+
+# Don't use 2.4.0.
+python-dateutil==2.4.2
+six==1.9.0
+
+# For fetching remote data
+requests==2.7.0
+
+Cython==0.22
+
+# faster OrderedDict
+cyordereddict==0.2.2
+
+# faster array ops.
+bottleneck==1.0.0

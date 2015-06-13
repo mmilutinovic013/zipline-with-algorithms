@@ -1,0 +1,36 @@
+package:
+  name: zipline
+  version: 0.8.0rc1
+
+source:
+  fn: zipline-0.8.0rc1.tar.gz
+  url: https://pypi.python.org/packages/source/z/zipline/zipline-0.8.0rc1.tar.gz
+  md5: f23bdd0a8671b3b297072391fc817097
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - cython
+  run:
+    - python
+    - pytz
+    - requests
+    - numpy
+    - pandas
+    - scipy
+    - matplotlib
+    - logbook
+
+test:
+  # Python imports
+  imports:
+    - zipline
+
+about:
+  home: https://github.com/quantopian/zipline
+  license: Apache Software License
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
