@@ -1,8 +1,20 @@
-# For this example, we're going to write a simple momentum script.  
-# When the stock goes up quickly, we're going to buy; 
-# when it goes down we're going to sell.  
-# Hopefully we'll ride the waves.
-
+# 
+# The goal for this algorithm is going to be to run a few tests on different market parameters to
+# determine what kind of market we are looking at (eg. given a new market)
+# 
+# This will help with short term and long term market analysis, and teach the program what market it is looking
+# at. For the user it makes it simple to make investment decisions and allows them to make important decisions 
+# on if new markets look like they are good ones to enter or not. 
+# 
+# We will look at a tech market, a failed market, and a natural resource market for these tests.
+# 
+# Based on the result we will teach the program what decisions are best to make as long as it chose the
+# correct market fromt the data.
+# 
+# Another feature to add will be a function that says the market is indetermiable at the moment, saying it needs
+# more data. This will allow the risk to be calculated so that the program doesn't make rash decisions costing the
+# user a lot of money.
+#
 # To run an algorithm in Quantopian, you need two functions: 
 # initialize and handle_data.
 def initialize(context):
@@ -50,13 +62,10 @@ def handle_data(context, data):
     if current_price > 1.03*average_price and cash > current_price and context.daycounter > 3:
         
         # Need to calculate how many shares we can buy
-        number_of_shares_possible = int(cash/current_price)
-        # Use past data to determine how many shares we should buy.
-        number_of_shares_to_buy = number_of_shares_possible
-        if (current_price/cash > cash/2):
-            number_of_shares_to_buy = cash / 2
+        number_of_shares = int(cash/current_price)
+        
         # Place the buy order (positive means buy, negative means sell)
-        order(context.security, + number_of_shares_to_buy)
+        order(context.security, +number_of_shares)
         log.info("Buying %s" % (context.security.symbol))
         # if we are successful in buying shares we reset the day counter to
         # measure our success for the next month...
