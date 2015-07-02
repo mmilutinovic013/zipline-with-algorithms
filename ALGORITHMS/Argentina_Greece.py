@@ -27,3 +27,26 @@
 #   If we look at these sectors and their trends over a time of depression we will be able to look for
 #   patterns to determine if this market is stable enough to invest in / what types of services would be most
 #   likely to grow through the process of the depression. 
+
+def initialize(context):
+	context.security = symbol('AAPL')
+	context.daycounter = 0
+
+def handle_data(context, data):
+	average_price = data[context.security].mavg(5)
+	current_price = data[context.security].price
+	cash = context.portfolio.cash
+
+	if current_price > 1.05*average_price and cash > current_price:
+		number_of_shares = int(cash/current_price)
+		order(context.security, +number_of_shares)
+        log.info("Buying %s" % (context.security.symbol))
+    elif current_price < average_price and context.daycounter > 30:
+            # Sell all of our shares by setting the target position to zero
+        order_target(context.security, 0)
+        log.info("Selling %s" % (context.security.symbol))
+    
+    # You can use the record() method to track any custom signal. 
+    # The record graph tracks up to five different variables. 
+    # Here we record the Apple stock price.
+    record(stock_price=data[context.security].price)
