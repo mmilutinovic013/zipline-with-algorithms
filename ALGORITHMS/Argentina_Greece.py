@@ -39,20 +39,8 @@ def initialize(context):
 	context.daycounter = 0
 
 def handle_data(context, data):
-	average_price = data[context.security].mavg(5)
-	current_price = data[context.security].price
-	cash = context.portfolio.cash
-
-	if current_price > 1.05*average_price and cash > current_price:
-		number_of_shares = int(cash/current_price)
-		order(context.security, +number_of_shares)
-        log.info("Buying %s" % (context.security.symbol))
-    elif current_price < average_price and context.daycounter > 30:
-            # Sell all of our shares by setting the target position to zero
-        order_target(context.security, 0)
-        log.info("Selling %s" % (context.security.symbol))
-    
-    # You can use the record() method to track any custom signal. 
-    # The record graph tracks up to five different variables. 
-    # Here we record the Apple stock price.
-    record(stock_price=data[context.security].price)
+	# You can pass a string variable into record().
+    # Here we record the price of all the stocks in our universe.
+    for stock in data:
+      price = data[stock].price
+      record(stock, price)
