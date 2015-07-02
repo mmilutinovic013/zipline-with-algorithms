@@ -29,7 +29,13 @@
 #   likely to grow through the process of the depression. 
 
 def initialize(context):
-	context.security = symbol('AAPL')
+	#
+	# Here we need to initialize the core financial areas of the selected country: z.B. Argentina grouped
+	# Greece Grouped etc...
+	#
+    # Currently specified: Argentinian Stocks 
+    #
+	context.stocks = symbols('APSA','BMA', 'CRESY', 'TEO')
 	context.daycounter = 0
 
 def handle_data(context, data):
