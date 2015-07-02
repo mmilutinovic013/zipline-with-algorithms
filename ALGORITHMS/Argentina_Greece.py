@@ -35,7 +35,7 @@ def initialize(context):
 	#
     # Currently specified: Argentinian Stocks 
     #
-	context.stocks = symbols('APSA','BMA', 'CRESY', 'TEO')
+	context.stocks = symbols('APSA','BMA', 'CRESY', 'TEO', 'TS', 'TGS')
 	context.daycounter = 0
 
 def handle_data(context, data):
