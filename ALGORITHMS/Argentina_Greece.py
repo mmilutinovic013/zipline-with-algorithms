@@ -28,15 +28,25 @@
 #   patterns to determine if this market is stable enough to invest in / what types of services would be most
 #   likely to grow through the process of the depression. 
 
+# This example runs the same momentum play as the first sample 
+# (https://www.quantopian.com/help#sample-basic), but this time it uses more
+# securities during the backtest.
+    
+# Important note: All securities in an algorithm must be traded for the 
+# entire length of the backtest.  For instance, if you try to backtest both
+# Google and Facebook against 2011 data you will get an error; Facebook
+# wasn't traded until 2012.
+
+# First step is importing any needed libraries.
+
+import datetime
+import pytz
+
 def initialize(context):
-	#
-	# Here we need to initialize the core financial areas of the selected country: z.B. Argentina grouped
-	# Greece Grouped etc...
-	#
-    # Currently specified: Argentinian Stocks 
-    #
-	context.stocks = symbols('APSA','BMA', 'CRESY', 'TEO', 'TS', 'TGS')
-context.vwap = {}
+    # Here we initialize each stock.
+    # By calling symbols('AAPL', 'IBM', 'CSCO') we're storing the Security objects.
+    context.stocks = symbols('AAPL', 'IBM', 'CSCO')
+    context.vwap = {}
     context.price = {}
  
     # Setting our maximum position size, like previous example
@@ -45,7 +55,7 @@ context.vwap = {}
 
     # Initializing the time variables we use for logging
     # Convert timezone to US EST to avoid confusion
-    est = pytz.timezone('EST')
+    est = pytz.timezone('US/Eastern')
     context.d=datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=est)
    
 
@@ -61,7 +71,8 @@ def handle_data(context, data):
         tradeday = data[stock].datetime
         
     # This runs through each stock again.  It finds the price and calculates
-    # the volume-weighted average price.  If the price is moving quickly, and we have not exceeded our position limits, it executes the order and
+    # the volume-weighted average price.  If the price is moving quickly, and
+    # we have not exceeded our position limits, it executes the order and
     # updates our position.
     for stock in context.stocks:   
         vwap = data[stock].vwap(3)
