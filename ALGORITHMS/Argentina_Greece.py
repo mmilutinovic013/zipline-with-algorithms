@@ -61,8 +61,7 @@ def handle_data(context, data):
         tradeday = data[stock].datetime
         
     # This runs through each stock again.  It finds the price and calculates
-    # the volume-weighted average price.  If the price is moving quickly, and
-    # we have not exceeded our position limits, it executes the order and
+    # the volume-weighted average price.  If the price is moving quickly, and we have not exceeded our position limits, it executes the order and
     # updates our position.
     for stock in context.stocks:   
         vwap = data[stock].vwap(3)
