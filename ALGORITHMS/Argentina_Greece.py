@@ -28,24 +28,12 @@
 #   patterns to determine if this market is stable enough to invest in / what types of services would be most
 #   likely to grow through the process of the depression. 
 
-# This example runs the same momentum play as the first sample 
-# (https://www.quantopian.com/help#sample-basic), but this time it uses more
-# securities during the backtest.
-    
-# Important note: All securities in an algorithm must be traded for the 
-# entire length of the backtest.  For instance, if you try to backtest both
-# Google and Facebook against 2011 data you will get an error; Facebook
-# wasn't traded until 2012.
-
-# First step is importing any needed libraries.
-
 import datetime
 import pytz
 
 def initialize(context):
     # Here we initialize each stock.
-    # By calling symbols('AAPL', 'IBM', 'CSCO') we're storing the Security objects.
-    context.stocks = symbols('AAPL', 'IBM', 'CSCO')
+    context.stocks = symbols('BMA','TEO', 'TS', 'TGS')
     context.vwap = {}
     context.price = {}
  
@@ -76,6 +64,7 @@ def handle_data(context, data):
     # updates our position.
     for stock in context.stocks:   
         vwap = data[stock].vwap(3)
+        record(arg_mavg=data[data[stock]].mavg(20))
         price = data[stock].price  
 
         if price < vwap * 0.995 and notional > context.min_notional:
