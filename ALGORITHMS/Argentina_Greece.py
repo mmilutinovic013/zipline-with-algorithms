@@ -27,6 +27,16 @@
 #   If we look at these sectors and their trends over a time of depression we will be able to look for
 #   patterns to determine if this market is stable enough to invest in / what types of services would be most
 #   likely to grow through the process of the depression. 
+# This example runs the same momentum play as the first sample 
+# (https://www.quantopian.com/help#sample-basic), but this time it uses more
+# securities during the backtest.
+    
+# Important note: All securities in an algorithm must be traded for the 
+# entire length of the backtest.  For instance, if you try to backtest both
+# Google and Facebook against 2011 data you will get an error; Facebook
+# wasn't traded until 2012.
+
+# First step is importing any needed libraries.
 
 import datetime
 import pytz
@@ -45,36 +55,21 @@ def initialize(context):
     # Convert timezone to US EST to avoid confusion
     est = pytz.timezone('US/Eastern')
     context.d=datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=est)
-   
+    context.daycounter = 0
 
 def handle_data(context, data):
-    # Initializing the position as zero at the start of each frame
-    notional=0
-    
-    # This runs through each stock.  It computes
-    # our position at the start of each frame.
+    # We add a new day each time we iterate through this function...
+    cash = context.portfolio.cash
+    context.daycounter += 1
     for stock in context.stocks:
-        price = data[stock].price 
-        notional = notional + context.portfolio.positions[stock].amount * price
+        average_price = data[stock].mavg(5)
+        current_price = data[stock].price
         tradeday = data[stock].datetime
+        if current_price > 1.03*average_price and cash > current_price:
+            number_of_shares = int(cash/current_price)
+            # Place the buy order (positive means buy, negative means sell)
+            order(stock, +number_of_shares)
+            log.info("Buying %s" % (stock))
         
-    # This runs through each stock again.  It finds the price and calculates
-    # the volume-weighted average price.  If the price is moving quickly, and
-    # we have not exceeded our position limits, it executes the order and
-    # updates our position.
-    for stock in context.stocks:   
-        vwap = data[stock].vwap(3)
-        record(arg_mavg=data[data[stock]].mavg(20))
-        price = data[stock].price  
-
-        if price < vwap * 0.995 and notional > context.min_notional:
-            order(stock,-100)
-            notional = notional - price*100
-        elif price > vwap * 1.005 and notional < context.max_notional:
-            order(stock,+100)
-            notional = notional + price*100
-
-    # If this is the first trade of the day, it logs the notional.
     if (context.d + datetime.timedelta(days=1)) < tradeday:
-        log.debug(str(notional) + ' - notional start ' + tradeday.strftime('%m/%d/%y'))
         context.d = tradeday
